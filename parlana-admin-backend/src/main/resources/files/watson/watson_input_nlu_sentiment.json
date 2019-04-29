@@ -1,0 +1,12 @@
+{
+  "text": "REPLACEME",
+  "features": {
+    "entities": {
+      "emotion": true,
+      "sentiment": true,
+      "limit": 2
+    },
+    "sentiment": {}
+  },
+  "language": "es"
+}

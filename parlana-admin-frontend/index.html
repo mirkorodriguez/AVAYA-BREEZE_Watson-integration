@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Admin CC</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/login.css" rel="stylesheet">
+    <link href="css/spinner.css" rel="stylesheet">
+    <!-- Angular -->
+    <script type="text/javascript" src="js/angular.min.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+    <!-- Chart -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+  </head>
+
+<body ng-app="myApp" ng-controller="myController"  >
+<!-- <div ng-app="myApp" ng-controller="myController" class="container"> -->
+
+  <!-- Login Section -->
+  <div class="container">
+        <form name="myForm">
+          <div class="login-container" ng-show="showLogin">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>Central Number</label>
+                  <input type="text" name="centralNumber" ng-model="cn" required class="form-control"  autofocus="autofocus">
+                  <div ng-show="myForm.centralNumber.$error.required &amp;&amp; myForm.centralNumber.$touched" class="error">Required!</div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>Central Code</label>
+                  <input type="text" name="centralCode" ng-model="cc" required class="form-control">
+                  <div ng-show="myForm.centralCode.$error.required &amp;&amp; myForm.centralCode.$touched" class="error">Required!</div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>Password</label>
+                  <input type="password" name="pass" ng-model="cp" required class="form-control">
+                  <div ng-show="myForm.pass.$error.required &amp;&amp; myForm.pass.$touched" class="error">Required!</div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="form-group">
+                  <button ng-click="authenticate2()" ng-disabled="myForm.$invalid" class="btn btn-info pull-right">
+                    <div ng-show="!loading">Login</div>
+                    <div ng-show="loading" class="loader"> </div>
+                  </button>
+                  <div class="clearfix"></div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div ng-show="showError" class="alert alert-danger">Error: Review central data or credentials!</div>
+                <!-- <div ng-show="showSuccess" class="alert alert-success">Login Successful!</div> -->
+              </div>
+            </div>
+          </div>
+        </form>
+  </div>
+
+
+
+
+  <!-- Main Body -->
+  <div class="container" ng-show="showSuccess">
+    <img src="images/watsonlogo.jpg" class="img-responsive pull-right" alt="Watson" width="110" height="55">
+    <img src="images/avayalogo.jpg" class="img-responsive pull-right" alt="Avaya" width="110" height="55">
+
+    <h3>Admin Contact Center</h3>
+    <div class="clearfix"></div>
+
+    <div class="alert alert-info alert-dismissible" role="alert" ng-if="info">
+      <button type="button" class="close" aria-label="Close">
+        <span aria-hidden="true" ng-click="clearInfo()">&times;</span>
+      </button>{{info}}
+    </div>
+
+    <hr>
+    <table class="table table-striped">
+        <tr style="background-color:lightblue;">
+          <th colspan="2" class="text-danger">
+            <h3>{{centralMaster.centralNumber}}  {{centralMaster.centralCode}}</h3></th>
+          <th>SMS: </th>
+          <td align="left">{{centralMaster.centralNumberPstn}}</td>
+          <th>Language: </th>
+          <td align="left">{{centralMaster.centralLang}}</td>
+          <td><button class="btn btn-info btn-xs"  type="button" data-toggle="modal" data-target="#myModalCCEdit"><span class="glyphicon glyphicon-pencil"></span></button></td>
+        </tr>
+    </table>
+    <table class="table table-striped">
+        <tr style="background-color:lightblue;">
+          <th>Ext. Number</th>
+          <th>Ext. Area</th>
+          <th>Ext. Person</th>
+          <th>Ext. Email</th>
+          <th>Ext. Tel</th>
+          <th>Conf. Threashold</th>
+          <th>Edit</th>
+        </tr>
+        <tr ng-repeat="ext in centralMaster.extensionResponseDTOList" style="background-color:lightcyan;">
+          <td>{{ ext.extensionNumber }}</td>
+          <td>{{ ext.extensionAreaName }}</td>
+          <td>{{ ext.extensionPersonFullname }}</td>
+          <td>{{ ext.extensionPersonEmail }}</td>
+          <td>{{ ext.extensionPersonPhone }}</td>
+          <td>{{ ext.extensionIntentConfidence }}</td>
+          <td> <button class="btn btn-info btn-xs"  type="button" data-toggle="modal" data-target="#myModalExtEdit" ng-click="selectExtension(ext)"><span class="glyphicon glyphicon-pencil"></span></button> </td>
+        </tr>
+    </table>
+
+    <hr>
+    <b>Progress:</b>
+    <img src="images/workflow.png" class="img-responsive pull-center" alt="Workflow">
+    <hr>
+    <button type="button" class="btn btn-info btn-xs pull-left" ng-click="listCallEvents()"><span class="glyphicon glyphicon-th-list"></span> List Calls</button>
+    <table class="table table-striped">
+        <tr>
+          <th>Datetime</th>
+          <th>From</th>
+          <th>Final Ext</th>
+          <th>Audio</th>
+          <th>Transcript</th>
+          <th>Transcript Confidence</th>
+          <th>Intent</th>
+          <th>Intent Confidence</th>
+          <th>Details</th>
+        </tr>
+        <tr ng-repeat="c in callEvents" valign="middle">
+          <td>{{c.callEventDatetime}}</td>
+          <td>{{c.callEventFrom}}</td>
+          <td><b>{{c.callEventFinalExtension}}</b></td>
+          <td>
+            <a href="https://storage.googleapis.com/mirkos-bucket/{{c.callEventAudioWav}}">
+              <img src="images/audio.png" alt="{{c.callEventAudioWav}}" width="25" height="25">
+            </a>
+          </td>
+          <td>{{c.callEventText}}</td>
+          <td>{{c.callEventTextConfidence}}</td>
+          <td><b>{{c.callEventIntentCode}}</b></td>
+          <td>{{c.callEventIntentConfidence}}</td>
+          <td> <button class="btn btn-info btn-xs"  type="button" data-toggle="modal" data-target="#myModalCallDetails" ng-click="viewDetails(c)"><span class="glyphicon glyphicon-zoom-in"></span></button> </td>
+        </tr>
+    </table>
+  </div>
+
+
+
+
+  <!-- Modal Central Master-->
+  <div id="myModalCCEdit" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Edit Central : {{centralMaster.centralNumber}}</h4>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal">
+          <div class="form-group">
+    		    <label class="col-sm-2 control-label">SMS: </label>
+    		    <div class="col-xs-4">
+    		      <input type="text" class="form-control" ng-model="centralMaster.centralNumberPstn" size="">
+    		    </div>
+    		  </div>
+
+    		  <div class="form-group">
+    		    <label class="col-sm-2 control-label">Language: </label>
+    		    <div class="col-xs-4">
+    		      <input type="text" class="form-control" ng-model="centralMaster.centralLang">
+    		    </div>
+    		  </div>
+
+    		  <div class="form-group">
+    		    <div class="col-sm-offset-2 col-sm-10">
+    		      <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="updateCentralMaster();">Save</button>
+    		    </div>
+    		  </div>
+    		</form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="authenticate2()">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal Extension-->
+  <div id="myModalExtEdit" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Edit: {{selectedExt.extensionAreaName}}</h4>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal">
+          <div class="form-group">
+    		    <label class="col-sm-2 control-label">Ext. Number: </label>
+    		    <div class="col-xs-4">
+    		      <input type="text" class="form-control" ng-model="selectedExt.extensionNumber" size="">
+    		    </div>
+    		  </div>
+
+          <div class="form-group">
+    		    <label class="col-sm-2 control-label">CSR Mail: </label>
+    		    <div class="col-xs-4">
+    		      <input type="text" class="form-control" ng-model="selectedExt.extensionPersonEmail" size="">
+    		    </div>
+    		  </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label">CSR Phone: </label>
+            <div class="col-xs-4">
+              <input type="text" class="form-control" ng-model="selectedExt.extensionPersonPhone" size="">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Conf. Threashold: </label>
+            <div class="col-xs-4">
+              <input type="text" class="form-control" ng-model="selectedExt.extensionIntentConfidence" size="">
+            </div>
+          </div>
+
+    		  <div class="form-group">
+    		    <div class="col-sm-offset-2 col-sm-10">
+    		      <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="updateExtension(selectedExt);">Save</button>
+    		    </div>
+    		  </div>
+    		</form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="authenticate2()">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+
+
+  <!-- Modal Call Details-->
+  <div id="myModalCallDetails" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Call Details</h4>
+        </div>
+        <div class="modal-body">
+          <table class="table table-striped">
+
+              <tr><td colspan="2"><p class="text-primary">{{selectedCall.callEventText}}</></td></tr>
+      	      <tr><td>Sentiment: </td><td><img src="images/{{selectedCall.callEventFinalSentimentLabel}}.png" width="18" height="18"> {{selectedCall.callEventFinalSentimentLabel}} [{{selectedCall.callEventFinalSentimentScore}}]</td></tr>
+              <tr><th colspan="2"></tr>
+      	  </table>
+          <canvas id="radar-chart" width="800" height="600"></canvas>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="js/bootstrap.min.js"></script>
+
+</body>

@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.parlana.core.model.dao.mapper.CallEventMapper">
+  <resultMap id="CallEventClass" type="com.parlana.core.model.CallEvent">
+    <id column="id_call_event" jdbcType="BIGINT" property="idCallEvent" />
+    <result column="call_event_datetime" jdbcType="VARCHAR" property="callEventDatetime" />
+    <result column="call_event_from" jdbcType="VARCHAR" property="callEventFrom" />
+    <result column="call_event_to" jdbcType="VARCHAR" property="callEventTo" />
+    <result column="call_event_to_code" jdbcType="VARCHAR" property="callEventToCode" />
+    <result column="call_event_audio_wav" jdbcType="VARCHAR" property="callEventAudioWav" />
+    <result column="call_event_text" jdbcType="VARCHAR" property="callEventText" />
+    <result column="call_event_text_confidence" jdbcType="VARCHAR" property="callEventTextConfidence" />
+    <result column="call_event_intent_code" jdbcType="VARCHAR" property="callEventIntentCode" />
+    <result column="call_event_intent_confidence" jdbcType="VARCHAR" property="callEventIntentConfidence" />
+    <result column="call_event_final_extension" jdbcType="VARCHAR" property="callEventFinalExtension" />
+    <result column="call_event_final_sentiment_label" jdbcType="VARCHAR" property="callEventFinalSentimentLabel" />
+    <result column="call_event_final_sentiment_score" jdbcType="VARCHAR" property="callEventFinalSentimentScore" />
+    <result column="call_event_final_emotion_sadness" jdbcType="VARCHAR" property="callEventFinalEmotionSadness" />
+    <result column="call_event_final_emotion_joy" jdbcType="VARCHAR" property="callEventFinalEmotionJoy" />
+    <result column="call_event_final_emotion_fear" jdbcType="VARCHAR" property="callEventFinalEmotionFear" />
+    <result column="call_event_final_emotion_disgust" jdbcType="VARCHAR" property="callEventFinalEmotionDisgust" />
+    <result column="call_event_final_emotion_anger" jdbcType="VARCHAR" property="callEventFinalEmotionAnger" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id_call_event, call_event_datetime, call_event_from, call_event_to, call_event_to_code, call_event_audio_wav, 
+    call_event_text, call_event_text_confidence, call_event_intent_code, call_event_intent_confidence, call_event_final_extension, 
+    call_event_final_sentiment_label, call_event_final_sentiment_score, call_event_final_emotion_sadness, 
+    call_event_final_emotion_joy, call_event_final_emotion_fear, call_event_final_emotion_disgust, 
+    call_event_final_emotion_anger
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="CallEventClass">
+    select 
+    <include refid="Base_Column_List" />
+    from call_event
+    where id_call_event = #{idCallEvent,jdbcType=BIGINT}
+  </select>
+  
+  <select id="selectByCallEventTo" parameterType="java.lang.String" resultMap="CallEventClass">
+    select 
+    <include refid="Base_Column_List" />
+    from call_event
+    where call_event_to = #{callEventTo,jdbcType=BIGINT}
+    order by id_call_event desc
+  </select>
+
+  <select id="selectByCallEventToAndCode" parameterType="com.parlana.core.model.CallEvent" resultMap="CallEventClass">
+    select 
+    <include refid="Base_Column_List" />
+    from call_event
+    where call_event_to = #{callEventTo,jdbcType=BIGINT}
+    and call_event_to_code = #{callEventToCode,jdbcType=BIGINT}
+    order by id_call_event desc
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from call_event
+    where id_call_event = #{idCallEvent,jdbcType=BIGINT}
+  </delete>
+  
+  <insert id="insert" parameterType="com.parlana.core.model.CallEvent">
+    <selectKey keyProperty="idCallEvent" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into call_event (call_event_datetime, call_event_from, 
+      call_event_to, call_event_to_code, call_event_audio_wav, call_event_text, call_event_text_confidence, 
+      call_event_intent_code, call_event_intent_confidence, 
+      call_event_final_extension, call_event_final_sentiment_label, 
+      call_event_final_sentiment_score, call_event_final_emotion_sadness, 
+      call_event_final_emotion_joy, call_event_final_emotion_fear, 
+      call_event_final_emotion_disgust, call_event_final_emotion_anger
+      )
+    values (#{callEventDatetime,jdbcType=VARCHAR}, #{callEventFrom,jdbcType=VARCHAR}, 
+      #{callEventTo,jdbcType=VARCHAR}, #{callEventToCode,jdbcType=VARCHAR}, #{callEventAudioWav,jdbcType=VARCHAR}, 
+      #{callEventText,jdbcType=VARCHAR}, #{callEventTextConfidence,jdbcType=VARCHAR}, 
+      #{callEventIntentCode,jdbcType=VARCHAR}, #{callEventIntentConfidence,jdbcType=VARCHAR}, 
+      #{callEventFinalExtension,jdbcType=VARCHAR}, #{callEventFinalSentimentLabel,jdbcType=VARCHAR}, 
+      #{callEventFinalSentimentScore,jdbcType=VARCHAR}, #{callEventFinalEmotionSadness,jdbcType=VARCHAR}, 
+      #{callEventFinalEmotionJoy,jdbcType=VARCHAR}, #{callEventFinalEmotionFear,jdbcType=VARCHAR}, 
+      #{callEventFinalEmotionDisgust,jdbcType=VARCHAR}, #{callEventFinalEmotionAnger,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.parlana.core.model.CallEvent">
+    <selectKey keyProperty="idCallEvent" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into call_event
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="callEventDatetime != null">
+        call_event_datetime,
+      </if>
+      <if test="callEventFrom != null">
+        call_event_from,
+      </if>
+      <if test="callEventTo != null">
+        call_event_to,
+      </if>
+      <if test="callEventToCode != null">
+        call_event_to_code,
+      </if>
+      <if test="callEventAudioWav != null">
+        call_event_audio_wav,
+      </if>
+      <if test="callEventText != null">
+        call_event_text,
+      </if>
+      <if test="callEventTextConfidence != null">
+        call_event_text_confidence,
+      </if>
+      <if test="callEventIntentCode != null">
+        call_event_intent_code,
+      </if>
+      <if test="callEventIntentConfidence != null">
+        call_event_intent_confidence,
+      </if>
+      <if test="callEventFinalExtension != null">
+        call_event_final_extension,
+      </if>
+      <if test="callEventFinalSentimentLabel != null">
+        call_event_final_sentiment_label,
+      </if>
+      <if test="callEventFinalSentimentScore != null">
+        call_event_final_sentiment_score,
+      </if>
+      <if test="callEventFinalEmotionSadness != null">
+        call_event_final_emotion_sadness,
+      </if>
+      <if test="callEventFinalEmotionJoy != null">
+        call_event_final_emotion_joy,
+      </if>
+      <if test="callEventFinalEmotionFear != null">
+        call_event_final_emotion_fear,
+      </if>
+      <if test="callEventFinalEmotionDisgust != null">
+        call_event_final_emotion_disgust,
+      </if>
+      <if test="callEventFinalEmotionAnger != null">
+        call_event_final_emotion_anger,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="callEventDatetime != null">
+        #{callEventDatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventFrom != null">
+        #{callEventFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventTo != null">
+        #{callEventTo,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventToCode != null">
+        #{callEventToCode,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventAudioWav != null">
+        #{callEventAudioWav,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventText != null">
+        #{callEventText,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventTextConfidence != null">
+        #{callEventTextConfidence,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventIntentCode != null">
+        #{callEventIntentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventIntentConfidence != null">
+        #{callEventIntentConfidence,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventFinalExtension != null">
+        #{callEventFinalExtension,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventFinalSentimentLabel != null">
+        #{callEventFinalSentimentLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventFinalSentimentScore != null">
+        #{callEventFinalSentimentScore,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventFinalEmotionSadness != null">
+        #{callEventFinalEmotionSadness,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventFinalEmotionJoy != null">
+        #{callEventFinalEmotionJoy,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventFinalEmotionFear != null">
+        #{callEventFinalEmotionFear,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventFinalEmotionDisgust != null">
+        #{callEventFinalEmotionDisgust,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventFinalEmotionAnger != null">
+        #{callEventFinalEmotionAnger,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.parlana.core.model.CallEvent">
+    update call_event
+    <set>
+      <if test="callEventDatetime != null">
+        call_event_datetime = #{callEventDatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventFrom != null">
+        call_event_from = #{callEventFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventTo != null">
+        call_event_to = #{callEventTo,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventAudioWav != null">
+        call_event_audio_wav = #{callEventAudioWav,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventText != null">
+        call_event_text = #{callEventText,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventTextConfidence != null">
+        call_event_text_confidence = #{callEventTextConfidence,jdbcType=VARCHAR},
+      </if>      
+      <if test="callEventIntentCode != null">
+        call_event_intent_code = #{callEventIntentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventIntentConfidence != null">
+        call_event_intent_confidence = #{callEventIntentConfidence,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventFinalExtension != null">
+        call_event_final_extension = #{callEventFinalExtension,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventFinalSentimentLabel != null">
+        call_event_final_sentiment_label = #{callEventFinalSentimentLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventFinalSentimentScore != null">
+        call_event_final_sentiment_score = #{callEventFinalSentimentScore,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventFinalEmotionSadness != null">
+        call_event_final_emotion_sadness = #{callEventFinalEmotionSadness,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventFinalEmotionJoy != null">
+        call_event_final_emotion_joy = #{callEventFinalEmotionJoy,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventFinalEmotionFear != null">
+        call_event_final_emotion_fear = #{callEventFinalEmotionFear,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventFinalEmotionDisgust != null">
+        call_event_final_emotion_disgust = #{callEventFinalEmotionDisgust,jdbcType=VARCHAR},
+      </if>
+      <if test="callEventFinalEmotionAnger != null">
+        call_event_final_emotion_anger = #{callEventFinalEmotionAnger,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id_call_event = #{idCallEvent,jdbcType=BIGINT}
+  </update>
+</mapper>

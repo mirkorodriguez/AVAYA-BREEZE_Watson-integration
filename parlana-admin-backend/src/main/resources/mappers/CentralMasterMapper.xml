@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.parlana.core.model.dao.mapper.CentralMasterMapper">
+  
+  <resultMap id="CentralMasterClass" type="com.parlana.core.model.CentralMaster">
+    <id column="id_central_number" jdbcType="BIGINT" property="idCentralNumber" />
+    <result column="central_number" jdbcType="VARCHAR" property="centralNumber" />
+    <result column="central_code" jdbcType="VARCHAR" property="centralCode" />    
+    <result column="central_number_pstn" jdbcType="VARCHAR" property="centralNumberPstn" />
+    <result column="central_smgr_ip" jdbcType="VARCHAR" property="centralSmgrIp" />
+    <result column="central_lang" jdbcType="VARCHAR" property="centralLang" />
+    <result column="central_access_pwd" jdbcType="VARCHAR" property="centralAccessPwd" />
+    <collection property="extensionList" javaType="ArrayList" ofType="com.parlana.core.model.Extension">
+	    <id column="id_extension" jdbcType="BIGINT" property="idExtension" />
+	    <result column="id_central_number" jdbcType="BIGINT" property="idCentralNumber" />
+	    <result column="extension_number" jdbcType="VARCHAR" property="extensionNumber" />
+	    <result column="extension_number_pstn" jdbcType="VARCHAR" property="extensionNumberPstn" />
+	    <result column="extension_area_name" jdbcType="VARCHAR" property="extensionAreaName" />
+	    <result column="extension_intent_code" jdbcType="VARCHAR" property="extensionIntentCode" />
+	    <result column="extension_intent_confidence" jdbcType="VARCHAR" property="extensionIntentConfidence" />
+	    <result column="extension_person_fullname" jdbcType="VARCHAR" property="extensionPersonFullname" />
+	    <result column="extension_person_email" jdbcType="VARCHAR" property="extensionPersonEmail" />
+	    <result column="extension_person_phone" jdbcType="VARCHAR" property="extensionPersonPhone" />
+    </collection>    
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    id_central_number, central_number, central_number_pstn, central_smgr_ip, central_lang, 
+    central_access_pwd
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="CentralMasterClass">
+    select 
+    <include refid="Base_Column_List" />
+    from central_master
+    where id_central_number = #{idCentralNumber,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectByCentralNumber" parameterType="java.lang.String" resultMap="CentralMasterClass">
+    select 
+    M.id_central_number, M.central_number, M.central_number_pstn, M.central_smgr_ip, M.central_lang, 
+    M.central_access_pwd,
+    E.id_extension, E.id_central_number, E.extension_number, E.extension_number_pstn, E.extension_area_name, 
+    E.extension_intent_code, E.extension_intent_confidence, E.extension_person_fullname, E.extension_person_email, 
+    extension_person_phone
+    from central_master M
+    left outer join extension E on M.id_central_number = E.id_central_number 
+    where M.central_number = #{centralNumber,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectByCentralNumberAndCode" parameterType="com.parlana.core.model.CentralMaster" resultMap="CentralMasterClass">
+    select 
+    M.id_central_number, M.central_number, M.central_code, M.central_number_pstn, M.central_smgr_ip, M.central_lang, 
+    M.central_access_pwd,
+    E.id_extension, E.id_central_number, E.extension_number, E.extension_number_pstn, E.extension_area_name, 
+    E.extension_intent_code, E.extension_intent_confidence, E.extension_person_fullname, E.extension_person_email, 
+    extension_person_phone
+    from central_master M
+    left outer join extension E on M.id_central_number = E.id_central_number 
+    where M.central_number = #{centralNumber,jdbcType=BIGINT}
+    and M.central_code = #{centralCode,jdbcType=BIGINT}
+  </select>
+    
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from central_master
+    where id_central_number = #{idCentralNumber,jdbcType=BIGINT}
+  </delete>
+  
+  <insert id="insert" parameterType="com.parlana.core.model.CentralMaster">
+    insert into central_master (id_central_number, central_number, central_number_pstn, 
+      central_smgr_ip, central_lang, central_access_pwd
+      )
+    values (#{idCentralNumber,jdbcType=BIGINT}, #{centralNumber,jdbcType=VARCHAR}, #{centralNumberPstn,jdbcType=VARCHAR}, 
+      #{centralSmgrIp,jdbcType=VARCHAR}, #{centralLang,jdbcType=VARCHAR}, #{centralAccessPwd,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.parlana.core.model.CentralMaster">
+    insert into central_master
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="idCentralNumber != null">
+        id_central_number,
+      </if>
+      <if test="centralNumber != null">
+        central_number,
+      </if>
+      <if test="centralCode != null">
+        central_code,
+      </if>
+      <if test="centralNumberPstn != null">
+        central_number_pstn,
+      </if>
+      <if test="centralSmgrIp != null">
+        central_smgr_ip,
+      </if>
+      <if test="centralLang != null">
+        central_lang,
+      </if>
+      <if test="centralAccessPwd != null">
+        central_access_pwd,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="idCentralNumber != null">
+        #{idCentralNumber,jdbcType=BIGINT},
+      </if>
+      <if test="centralNumber != null">
+        #{centralNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="centralCode != null">
+        #{centralCode,jdbcType=VARCHAR},
+      </if>
+      <if test="centralNumberPstn != null">
+        #{centralNumberPstn,jdbcType=VARCHAR},
+      </if>
+      <if test="centralSmgrIp != null">
+        #{centralSmgrIp,jdbcType=VARCHAR},
+      </if>
+      <if test="centralLang != null">
+        #{centralLang,jdbcType=VARCHAR},
+      </if>
+      <if test="centralAccessPwd != null">
+        #{centralAccessPwd,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.parlana.core.model.CentralMaster">
+    update central_master
+    <set>
+      <if test="centralNumber != null">
+        central_number = #{centralNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="centralCode != null">
+        central_code = #{centralCode,jdbcType=VARCHAR},
+      </if>
+      <if test="centralNumberPstn != null">
+        central_number_pstn = #{centralNumberPstn,jdbcType=VARCHAR},
+      </if>
+      <if test="centralSmgrIp != null">
+        central_smgr_ip = #{centralSmgrIp,jdbcType=VARCHAR},
+      </if>
+      <if test="centralLang != null">
+        central_lang = #{centralLang,jdbcType=VARCHAR},
+      </if>
+      <if test="centralAccessPwd != null">
+        central_access_pwd = #{centralAccessPwd,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id_central_number = #{idCentralNumber,jdbcType=BIGINT}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="com.parlana.core.model.CentralMaster">
+    update central_master
+    set central_number = #{centralNumber,jdbcType=VARCHAR},
+      central_code = #{centralCode,jdbcType=VARCHAR},
+      central_number_pstn = #{centralNumberPstn,jdbcType=VARCHAR},
+      central_smgr_ip = #{centralSmgrIp,jdbcType=VARCHAR},
+      central_lang = #{centralLang,jdbcType=VARCHAR},
+      central_access_pwd = #{centralAccessPwd,jdbcType=VARCHAR}
+    where id_central_number = #{idCentralNumber,jdbcType=BIGINT}
+  </update>
+</mapper>

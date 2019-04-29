@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.parlana.core.model.dao.mapper.ExtensionMapper">
+  <resultMap id="ExtensionClass" type="com.parlana.core.model.Extension">
+    <id column="id_extension" jdbcType="BIGINT" property="idExtension" />
+    <result column="id_central_number" jdbcType="BIGINT" property="idCentralNumber" />
+    <result column="extension_number" jdbcType="VARCHAR" property="extensionNumber" />
+    <result column="extension_number_pstn" jdbcType="VARCHAR" property="extensionNumberPstn" />
+    <result column="extension_area_name" jdbcType="VARCHAR" property="extensionAreaName" />
+    <result column="extension_intent_code" jdbcType="VARCHAR" property="extensionIntentCode" />
+    <result column="extension_intent_confidence" jdbcType="VARCHAR" property="extensionIntentConfidence" />
+    <result column="extension_person_fullname" jdbcType="VARCHAR" property="extensionPersonFullname" />
+    <result column="extension_person_email" jdbcType="VARCHAR" property="extensionPersonEmail" />
+    <result column="extension_person_phone" jdbcType="VARCHAR" property="extensionPersonPhone" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id_extension, id_central_number, extension_number, extension_number_pstn, extension_area_name, 
+    extension_intent_code, extension_intent_confidence, extension_person_fullname, extension_person_email, 
+    extension_person_phone
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ExtensionClass">
+    select 
+    <include refid="Base_Column_List" />
+    from extension
+    where id_extension = #{idExtension,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from extension
+    where id_extension = #{idExtension,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.parlana.core.model.Extension">
+    <selectKey keyProperty="idExtension" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into extension (id_central_number, extension_number, 
+      extension_number_pstn, extension_area_name, 
+      extension_intent_code, extension_intent_confidence, 
+      extension_person_fullname, extension_person_email, 
+      extension_person_phone)
+    values (#{idCentralNumber,jdbcType=BIGINT}, #{extensionNumber,jdbcType=VARCHAR}, 
+      #{extensionNumberPstn,jdbcType=VARCHAR}, #{extensionAreaName,jdbcType=VARCHAR}, 
+      #{extensionIntentCode,jdbcType=VARCHAR}, #{extensionIntentConfidence,jdbcType=VARCHAR}, 
+      #{extensionPersonFullname,jdbcType=VARCHAR}, #{extensionPersonEmail,jdbcType=VARCHAR}, 
+      #{extensionPersonPhone,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.parlana.core.model.Extension">
+    <selectKey keyProperty="idExtension" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into extension
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="idCentralNumber != null">
+        id_central_number,
+      </if>
+      <if test="extensionNumber != null">
+        extension_number,
+      </if>
+      <if test="extensionNumberPstn != null">
+        extension_number_pstn,
+      </if>
+      <if test="extensionAreaName != null">
+        extension_area_name,
+      </if>
+      <if test="extensionIntentCode != null">
+        extension_intent_code,
+      </if>
+      <if test="extensionIntentConfidence != null">
+        extension_intent_confidence,
+      </if>
+      <if test="extensionPersonFullname != null">
+        extension_person_fullname,
+      </if>
+      <if test="extensionPersonEmail != null">
+        extension_person_email,
+      </if>
+      <if test="extensionPersonPhone != null">
+        extension_person_phone,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="idCentralNumber != null">
+        #{idCentralNumber,jdbcType=BIGINT},
+      </if>
+      <if test="extensionNumber != null">
+        #{extensionNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="extensionNumberPstn != null">
+        #{extensionNumberPstn,jdbcType=VARCHAR},
+      </if>
+      <if test="extensionAreaName != null">
+        #{extensionAreaName,jdbcType=VARCHAR},
+      </if>
+      <if test="extensionIntentCode != null">
+        #{extensionIntentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="extensionIntentConfidence != null">
+        #{extensionIntentConfidence,jdbcType=VARCHAR},
+      </if>
+      <if test="extensionPersonFullname != null">
+        #{extensionPersonFullname,jdbcType=VARCHAR},
+      </if>
+      <if test="extensionPersonEmail != null">
+        #{extensionPersonEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="extensionPersonPhone != null">
+        #{extensionPersonPhone,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.parlana.core.model.Extension">
+    update extension
+    <set>
+      <if test="idCentralNumber != null">
+        id_central_number = #{idCentralNumber,jdbcType=BIGINT},
+      </if>
+      <if test="extensionNumber != null">
+        extension_number = #{extensionNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="extensionNumberPstn != null">
+        extension_number_pstn = #{extensionNumberPstn,jdbcType=VARCHAR},
+      </if>
+      <if test="extensionAreaName != null">
+        extension_area_name = #{extensionAreaName,jdbcType=VARCHAR},
+      </if>
+      <if test="extensionIntentCode != null">
+        extension_intent_code = #{extensionIntentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="extensionIntentConfidence != null">
+        extension_intent_confidence = #{extensionIntentConfidence,jdbcType=VARCHAR},
+      </if>
+      <if test="extensionPersonFullname != null">
+        extension_person_fullname = #{extensionPersonFullname,jdbcType=VARCHAR},
+      </if>
+      <if test="extensionPersonEmail != null">
+        extension_person_email = #{extensionPersonEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="extensionPersonPhone != null">
+        extension_person_phone = #{extensionPersonPhone,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id_extension = #{idExtension,jdbcType=BIGINT}
+  </update>
+</mapper>

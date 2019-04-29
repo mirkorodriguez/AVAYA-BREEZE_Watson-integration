@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service xmlns="http://archiveschemas.aus.avaya.com/properties"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://archiveschemas.aus.avaya.com/properties properties.xsd"
+	name="${serviceName}" version="${serviceVersion}" application="${serviceName}-${serviceVersion}">
+	<smgr>
+		<description>Speech Recognition Service</description>
+		<term_order>1</term_order>
+		<term_group>1</term_group>
+		<fs_component>true</fs_component>
+		<attribute name="WS_BASE_BACKEND_ENDPOINT">
+			<displayName>WS_BASE_BACKEND_ENDPOINT</displayName>
+			<helpInfo>WS_BASE_BACKEND_ENDPOINT</helpInfo>
+			<global>false</global>
+			<validation name="AnyString">
+				<type>STRING</type>
+			</validation>
+			<portlet_changeable>false</portlet_changeable>
+			<admin_visible>true</admin_visible>
+			<admin_changeable>true</admin_changeable>
+			<factory>
+				<value>http://</value>
+				<user_changeable>true</user_changeable>
+			</factory>
+		</attribute>
+		<attribute name="CENTRAL_CODE">
+			<displayName>CENTRAL_CODE</displayName>
+			<helpInfo>CENTRAL_CODE</helpInfo>
+			<global>false</global>
+			<validation name="AnyString">
+				<type>STRING</type>
+			</validation>
+			<portlet_changeable>false</portlet_changeable>
+			<admin_visible>true</admin_visible>
+			<admin_changeable>true</admin_changeable>
+			<factory>
+				<value>PERXX</value>
+				<user_changeable>true</user_changeable>
+			</factory>
+		</attribute>
+		<attribute name="CENTRAL_AUDIO_LANG">
+			<displayName>CENTRAL_AUDIO_LANG</displayName>
+			<helpInfo>CENTRAL_AUDIO_LANG</helpInfo>
+			<global>false</global>
+			<validation name="AnyString">
+				<type>STRING</type>
+			</validation>
+			<portlet_changeable>false</portlet_changeable>
+			<admin_visible>true</admin_visible>
+			<admin_changeable>true</admin_changeable>
+			<factory>
+				<value>es</value>
+				<user_changeable>true</user_changeable>
+			</factory>
+		</attribute>
+	</smgr>
+</service>

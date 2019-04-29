@@ -1,0 +1,11 @@
+{
+  "config": {
+      "encoding":"LINEAR16",
+      "sampleRateHertz": 8000,
+      "languageCode": "LANGUAGE",
+      "enableWordTimeOffsets": false
+  },
+  "audio": {
+      "uri":"REPLACEME"
+  }
+}

@@ -1,0 +1,45 @@
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/login.css" rel="stylesheet">
+<script type="text/javascript" src="js/angular.min.js"></script>
+<script type="text/javascript" src="js/login.js"></script>
+<div ng-app="myApp" ng-controller="myController" class="container">
+      <form name="myForm">
+        <div class="login-container">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label>Central Number</label>
+                <input type="text" name="centralNumber" ng-model="cn" required class="form-control"  autofocus="autofocus">
+                <div ng-show="myForm.centralNumber.$error.required &amp;&amp; myForm.centralNumber.$touched" class="error">Required!</div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label>Central Code</label>
+                <input type="text" name="centralCode" ng-model="cc" required class="form-control">
+                <div ng-show="myForm.centralCode.$error.required &amp;&amp; myForm.centralCode.$touched" class="error">Required!</div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="pass" ng-model="cp" required class="form-control">
+                <div ng-show="myForm.pass.$error.required &amp;&amp; myForm.pass.$touched" class="error">Required!</div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <button ng-click="authenticate2()" ng-disabled="myForm.$invalid" class="btn btn-info pull-right">Access</button>
+                <div class="clearfix"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div ng-show="showError" class="alert alert-danger">Error: Review central data or credentials!</div>
+              <div ng-show="showSuccess" class="alert alert-success">Login Successful!</div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
